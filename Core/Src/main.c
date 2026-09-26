@@ -95,8 +95,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim4);
 
-    HAL_ADC_Start(&hadc1);
-
     while (1) {
 
         HAL_Delay(500);
@@ -296,7 +294,11 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) //Função chamada quando o timer zera
 {
-          HAL_ADC_Start(&hadc1);
+        if (htim->Instance != TIM4) {
+            return;
+        }
+
+        HAL_ADC_Start(&hadc1);
         if (HAL_ADC_PollForConversion(&hadc1, 1000) == HAL_OK) {
             adcValue = HAL_ADC_GetValue(&hadc1);
         }
